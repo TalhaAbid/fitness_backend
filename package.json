@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node dist/index.js",
+    "postinstall": "tsc",
     "tsc": "tsc",
     "dev": "ts-node-dev src/server.ts",
-    "lint": "eslint --ext .ts ."
+    "lint": "eslint --ext .ts .",
+    "deploy": "git push heroku master"
   },
   "keywords": [],
   "author": "Talha Abid",

@@ -1,23 +1,30 @@
 import mongoose from 'mongoose'
+import { WorkoutI, Workout } from './Workout'
 
-
-
-export type UserDocument = mongoose.Document & {
+export interface UserI {
     username: string;
     passwordHash: string;
-    age: number;
+    workouts: Array<WorkoutI>;
 }
 
-const userSchema = new mongoose.Schema<UserDocument>(
-    {
-        username: String,
-        passwordHash: String,
-        age: Number
-    }
-)
+const userSchema = new mongoose.Schema<UserI>({
+    username: {
+        type: String,
+        required: true
+    },
+    passwordHash: {
+        type: String,
+        required: true
+    },
+    workouts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workout'
+    }]
+
+})
 
 userSchema.set('toJSON', {
-    transform: (_document: UserDocument, returnedObject: UserDocument) => {
+    transform: (_document: UserI, returnedObject: UserI & mongoose.Document) => {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
@@ -26,4 +33,5 @@ userSchema.set('toJSON', {
 })
 
 
-export const User = mongoose.model<UserDocument>("User", userSchema);
+
+export const User = mongoose.model<UserI>("User", userSchema);

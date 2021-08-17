@@ -1,20 +1,17 @@
 import mongoose from 'mongoose'
-import { ExerciseDocument, Exercise } from './Exercise'
+import { ExerciseI, Exercise } from './Exercise'
 
-export type WorkoutDocument = mongoose.Document & {
-	name: string;
-	day: string;
-	target: string;
-	exercises: Array<ExerciseDocument>
+export interface WorkoutI {
+	exercises: Array<ExerciseI>
 }
 
-const workoutScehma = new mongoose.Schema<WorkoutDocument>(
+export const workoutSchema = new mongoose.Schema<WorkoutI>(
 	{
-		name: String,
-		day: String,
-		target: String,
-		exercises: [Exercise]
+		exercises: [{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Exercise'
+		}]
 	}
 )
 
-export const Workout = mongoose.model<WorkoutDocument>("Workout", workoutScehma)
+export const Workout = mongoose.model<WorkoutI>("Workout", workoutSchema)

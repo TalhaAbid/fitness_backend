@@ -1,17 +1,18 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { User, UserDocument } from '../models/User'
+import { User, UserI } from '../models/User'
 import { Response, Request } from 'express'
 
 export const loginUserApi = async (req: Request, res: Response) => {
     const body = req.body;
+    console.log(body)
 
-    const user: UserDocument = await User.findOne({ username: body.username })
+    const user = await User.findOne({ username: body.username })
     const passwordCorrect = user === null ? false :
         await bcrypt.compare(body.password, user.passwordHash);
 
     if (user === null || passwordCorrect === false) {
-        return res.sendStatus(401).json({
+        return res.status(401).json({
             error: 'invalid username or password'
         })
     }

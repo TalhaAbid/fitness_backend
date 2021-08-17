@@ -19,9 +19,12 @@ const options = {
 	autoIndex: false, // Don't build indexes
 	poolSize: 10, // Maintain up to 10 socket connections
 };
-mongoose.connect(uri, options)
-	.then(() => console.log('succesfully connected to mongodb'))
-	.catch(error => console.log(`MongoDB connection error. Please make sure MongoDB is running. ${error}`))
+mongoose.connect(uri, options);
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error: '));
+db.once('open', function() {
+	console.log('succesfully connected to mongodb')
+})
 
 
 
@@ -38,11 +41,25 @@ app.get('/', (_req, res) => {
 	res.send('pong')
 })
 
+///////////////////////////////////////////////////////////////////////////////
+//                                Exercise Api                               //
+///////////////////////////////////////////////////////////////////////////////
 
 app.get('/api/exercises', exerciseController.getExercisesApi);
 app.post('/api/exercises', exerciseController.addExerciseApi);
+
+///////////////////////////////////////////////////////////////////////////////
+//                                 Users Api                                 //
+///////////////////////////////////////////////////////////////////////////////
+
+
 app.get('/api/users', userController.getUsersApi);
 app.post('/api/users', userController.addUserApi);
+
+///////////////////////////////////////////////////////////////////////////////
+//                                   Login                                   //
+///////////////////////////////////////////////////////////////////////////////
+
 app.post('/api/login', loginController.loginUserApi)
 
 
